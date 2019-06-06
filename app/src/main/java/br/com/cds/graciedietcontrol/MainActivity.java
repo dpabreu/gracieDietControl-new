@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.cds.graciedietcontrol.ui.activity.ListaGruposActivity;
+import br.com.cds.graciedietcontrol.ui.activity.ListaSubGruposActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,17 +41,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_grupos) {
             startActivity(new Intent(MainActivity.this, ListaGruposActivity.class));
             return true;
         }
 
+        if (id == R.id.action_sub_grupos) {
+            startActivity(new Intent(MainActivity.this, ListaSubGruposActivity.class));
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 }
