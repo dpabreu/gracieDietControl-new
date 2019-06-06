@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Gracie Diet - Control</string>
+    <string name="action_grupos">Grupos</string>
+    <string name="action_sub_grupos">Sub Grupos</string>
+    <string name="action_alimentos">Alimentos</string>
+    <string name="title_activity_lista_grupos">ListaGruposActivity</string>
+</resources>
