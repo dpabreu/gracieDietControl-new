@@ -73,4 +73,24 @@ public class GruposDao {
         cursor.close();
         return grupos;
     }
+
+    public List<Grupos> getGrupoById(long id){
+        List<Grupos> grupos = new ArrayList<>();
+
+        Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_GRUPOS, columns,
+                CustomSQLiteOpenHelper.COLUMN_ID + "=" + id,null,
+                null, null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+
+            Grupos grupo = new Grupos();
+            grupo.setIdGrupo(cursor.getLong(0));
+            grupo.setNome(cursor.getString(1));
+            grupos.add(grupo);
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return grupos;
+    }
 }

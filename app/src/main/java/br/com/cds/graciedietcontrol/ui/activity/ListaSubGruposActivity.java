@@ -25,7 +25,10 @@ public class ListaSubGruposActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         abreConexao();
         listarSubGrupos();
+        configuraNovoSubGrupo();
+    }
 
+    private void configuraNovoSubGrupo() {
         FloatingActionButton fabNovoSubGrupo = findViewById(R.id.fab_novo_sub_grupo);
         fabNovoSubGrupo.setOnClickListener(new View.OnClickListener() {
             @Override

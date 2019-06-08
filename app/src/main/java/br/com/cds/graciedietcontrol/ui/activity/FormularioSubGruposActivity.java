@@ -27,11 +27,15 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_sub_grupos);
         setTitle("Novo Sub Grupo");
-        gruposDao.open();
-        subGruposDao.open();
+        abreConexao();
         listarGrupos();
         inicializarCampos();
         configuraBotaoSalvar();
+    }
+
+    private void abreConexao() {
+        gruposDao.open();
+        subGruposDao.open();
     }
 
     private void configuraBotaoSalvar() {
@@ -62,5 +66,18 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
         Spinner gruposList = findViewById(R.id.activity_formulario_sub_grupos_spinner_grupos);
         gruposList.setAdapter(adapter);
         gruposList.setSelection(-1);
+    }
+
+    @Override
+    protected void onResume() {
+        abreConexao();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        gruposDao.close();
+        subGruposDao.close();
+        super.onPause();
     }
 }

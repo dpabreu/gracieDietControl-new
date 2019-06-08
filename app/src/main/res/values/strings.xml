@@ -6,4 +6,5 @@
     <string name="title_activity_lista_grupos">Grupos</string>
     <string name="title_activity_lista_sub_grupos">Sub Grupos</string>
     <string name="spinner_formulario_sub_grupos">Selecione um Grupo</string>
+    <string name="title_activity_lista_alimentos">Alimentos</string>
 </resources>

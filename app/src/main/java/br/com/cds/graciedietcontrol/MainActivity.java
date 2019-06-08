@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import br.com.cds.graciedietcontrol.ui.activity.ListaAlimentosActivity;
 import br.com.cds.graciedietcontrol.ui.activity.ListaGruposActivity;
 import br.com.cds.graciedietcontrol.ui.activity.ListaSubGruposActivity;
 
@@ -53,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, ListaSubGruposActivity.class));
             return true;
         }
+
+        if (id == R.id.action_alimentos) {
+            startActivity(new Intent(MainActivity.this, ListaAlimentosActivity.class));
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }
