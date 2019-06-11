@@ -55,6 +55,32 @@ public class SubGruposDao {
         return newSubGrupo;
     }
 
+    public SubGrupos update(String nomeSubGrupo, long idGrupoFk, long idSubGrupo){
+        ContentValues values = new ContentValues();
+        values.put(CustomSQLiteOpenHelper.COLUMN_NOME_SUB_GRUPO, nomeSubGrupo);
+        values.put(CustomSQLiteOpenHelper.COLUMN_ID_GRUPO_FK, idGrupoFk);
+
+        long updateId = dataBase.update(CustomSQLiteOpenHelper.TABLE_SUB_GRUPOS, values,
+                CustomSQLiteOpenHelper.COLUMN_ID_SUB_GRUPO +"="+ idSubGrupo,
+                null);
+
+        Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_SUB_GRUPOS, columns,
+                CustomSQLiteOpenHelper.COLUMN_ID_SUB_GRUPO +" = " + updateId,
+                null, null,null, null);
+
+        cursor.moveToFirst();
+
+        SubGrupos editSubGrupo = new SubGrupos();
+        editSubGrupo.setIdSubGrupo(cursor.getLong(0));
+        editSubGrupo.setNome(cursor.getString(1));
+        editSubGrupo.setIdGrupo(cursor.getLong(2));
+
+        cursor.close();
+
+        return editSubGrupo;
+    }
+
+
     public void delete(SubGrupos subGrupo){
         long id = subGrupo.getIdSubGrupo();
         dataBase.delete(CustomSQLiteOpenHelper.TABLE_SUB_GRUPOS,

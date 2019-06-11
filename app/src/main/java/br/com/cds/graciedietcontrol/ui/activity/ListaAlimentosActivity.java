@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,10 +18,12 @@ import java.util.List;
 import br.com.cds.graciedietcontrol.R;
 import br.com.cds.graciedietcontrol.dao.AlimentosDao;
 import br.com.cds.graciedietcontrol.model.Alimentos;
+import br.com.cds.graciedietcontrol.model.SubGrupos;
 
 public class ListaAlimentosActivity extends AppCompatActivity {
 
     private AlimentosDao alimentosDao = new AlimentosDao(this);
+    private ArrayAdapter<Alimentos> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,7 @@ public class ListaAlimentosActivity extends AppCompatActivity {
 
     private void listarAlimentos() {
         final List<Alimentos> alimentos = alimentosDao.getAll();
-        ArrayAdapter<Alimentos> adapter = new ArrayAdapter<>( this,
+        adapter = new ArrayAdapter<>( this,
                 android.R.layout.simple_list_item_1, alimentos);
         ListView alimentosList = findViewById(R.id.activity_lista_alimentos_listview);
         alimentosList.setAdapter(adapter);
@@ -72,6 +76,24 @@ public class ListaAlimentosActivity extends AppCompatActivity {
                 startActivity(vaiParaFormularioAlimentos);
             }
         });
+
+        registerForContextMenu(alimentosList);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add("Remover");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo menuInfo =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Alimentos alimentoEscolhido = adapter.getItem(menuInfo.position);
+        alimentosDao.delete(alimentoEscolhido);
+        listarAlimentos();
+        return super.onContextItemSelected(item);
     }
 
     private void abreConexao() {

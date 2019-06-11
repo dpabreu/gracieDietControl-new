@@ -49,6 +49,28 @@ public class GruposDao {
         return newGrupo;
     }
 
+    public Grupos update(String nomeGrupo, long idGrupo){
+        ContentValues values = new ContentValues();
+        values.put(CustomSQLiteOpenHelper.COLUMN_NOME, nomeGrupo);
+
+        int updateId = dataBase.update(CustomSQLiteOpenHelper.TABLE_GRUPOS, values,
+                CustomSQLiteOpenHelper.COLUMN_ID + "=" + Long.toString(idGrupo),
+                null);
+
+        Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_GRUPOS, columns,
+                CustomSQLiteOpenHelper.COLUMN_ID + "=" + updateId, null,
+                null, null, null);
+
+        cursor.moveToFirst();
+
+        Grupos grupoEdit = new Grupos();
+        grupoEdit.setIdGrupo(cursor.getLong(0));
+        grupoEdit.setNome(cursor.getString(1));
+
+        cursor.close();
+        return grupoEdit;
+    }
+
     public void delete(Grupos grupo){
         long id = grupo.getIdGrupo();
         dataBase.delete(CustomSQLiteOpenHelper.TABLE_GRUPOS, CustomSQLiteOpenHelper.COLUMN_ID +"="+ id,

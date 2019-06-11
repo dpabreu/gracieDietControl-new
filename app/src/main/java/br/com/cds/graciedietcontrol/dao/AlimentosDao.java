@@ -54,6 +54,31 @@ public class AlimentosDao {
         return newAlimento;
     }
 
+    public Alimentos update(String nomeAlimento, long idSubGrupoFk, long idAlimento){
+        ContentValues values = new ContentValues();
+        values.put(CustomSQLiteOpenHelper.COLUMN_NOME_ALIMENTO, nomeAlimento);
+        values.put(CustomSQLiteOpenHelper.COLUMN_ID_SUB_GRUPO_FK, idSubGrupoFk);
+
+        long updateId = dataBase.update(CustomSQLiteOpenHelper.TABLE_ALIMENTOS, values,
+                CustomSQLiteOpenHelper.COLUMN_ID_ALIMENTO +"="+ idAlimento,
+                null);
+
+        Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_ALIMENTOS, columns,
+                CustomSQLiteOpenHelper.COLUMN_ID_ALIMENTO +" = " + updateId,
+                null, null,null, null);
+
+        cursor.moveToFirst();
+
+        Alimentos editAlimento = new Alimentos();
+        editAlimento.setIdAlimento(cursor.getLong(0));
+        editAlimento.setNome(cursor.getString(1));
+        editAlimento.setIdSubGrupo(cursor.getLong(2));
+
+        cursor.close();
+
+        return editAlimento;
+    }
+
     public void delete(Alimentos alimento){
         long id = alimento.getIdAlimento();
         dataBase.delete(CustomSQLiteOpenHelper.TABLE_ALIMENTOS,

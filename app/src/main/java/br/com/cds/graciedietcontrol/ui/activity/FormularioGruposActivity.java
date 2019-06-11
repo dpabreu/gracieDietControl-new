@@ -17,7 +17,7 @@ public class FormularioGruposActivity extends AppCompatActivity {
 
     private GruposDao dao = new GruposDao(this);
     private EditText campoNome;
-    private Grupos grupo;
+    private Grupos grupo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,11 @@ public class FormularioGruposActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String nomeGrupo = campoNome.getEditableText().toString();
-                dao.create(nomeGrupo);
+                if(grupo==null) {
+                    dao.create(nomeGrupo);
+                } else {
+                    dao.update(nomeGrupo, grupo.getIdGrupo());
+                }
                 finish();
             }
         });

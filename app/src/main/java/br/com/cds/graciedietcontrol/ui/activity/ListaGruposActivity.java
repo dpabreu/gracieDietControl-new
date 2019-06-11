@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +21,7 @@ import br.com.cds.graciedietcontrol.model.Grupos;
 
 public class ListaGruposActivity extends AppCompatActivity {
     private GruposDao dao = new GruposDao(this);
+    private ArrayAdapter<Grupos> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,6 @@ public class ListaGruposActivity extends AppCompatActivity {
         abreConexao();
         super.onResume();
         listarGrupos();
-
     }
 
     @Override
@@ -61,10 +63,9 @@ public class ListaGruposActivity extends AppCompatActivity {
     }
 
     private void listarGrupos() {
-        final List<Grupos> grupos = dao.getAll();
-        ArrayAdapter<Grupos> adapter = new ArrayAdapter<>( this,
-                android.R.layout.simple_list_item_1, grupos);
         ListView gruposList = findViewById(R.id.activity_lista_grupos_listview);
+        final List<Grupos> grupos = dao.getAll();
+        adapter = new ArrayAdapter<>( this, android.R.layout.simple_list_item_1, grupos);
         gruposList.setAdapter(adapter);
 
         gruposList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,7 +78,32 @@ public class ListaGruposActivity extends AppCompatActivity {
                 startActivity(vaiParaFormularioGrupo);
             }
         });
+
+        registerForContextMenu(gruposList);
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add("Remover");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo menuInfo =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Grupos grupoEscolhido = adapter.getItem(menuInfo.position);
+        dao.delete(grupoEscolhido);
+        listarGrupos();
+        return super.onContextItemSelected(item);
+    }
+
+
+
+
+
+
 
 
 }

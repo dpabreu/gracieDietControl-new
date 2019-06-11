@@ -26,7 +26,7 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
     private SubGruposDao subGruposDao = new SubGruposDao(this);
     private EditText campoNome;
     private Spinner campoGrupo;
-    private SubGrupos subGrupo;
+    private SubGrupos subGrupo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,14 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
                 String nomeSubGrupo = campoNome.getEditableText().toString();
                 Grupos grupo = (Grupos) campoGrupo.getSelectedItem();
                 long idGrupo = grupo.getIdGrupo();
-                subGruposDao.create(nomeSubGrupo,
-                                    idGrupo);
+                if(subGrupo==null) {
+                    subGruposDao.create(nomeSubGrupo,
+                            idGrupo);
+                } else {
+                    subGruposDao.update(nomeSubGrupo,
+                            idGrupo,
+                            subGrupo.getIdSubGrupo());
+                }
                 finish();
             }
         });

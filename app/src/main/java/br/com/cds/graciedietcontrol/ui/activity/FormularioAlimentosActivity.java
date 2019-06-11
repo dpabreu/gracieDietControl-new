@@ -28,7 +28,7 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
     private TextView campoNome;
     private Spinner campoSubGrupo;
     private Spinner campoGrupo;
-    private Alimentos alimento;
+    private Alimentos alimento = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +107,14 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
                 String nomeAlimento = campoNome.getEditableText().toString();
                 SubGrupos subGrupo = (SubGrupos) campoSubGrupo.getSelectedItem();
                 long idSubGrupo = subGrupo.getIdSubGrupo();
-                alimentosDao.create(nomeAlimento,
-                        idSubGrupo);
+                if(alimentosDao==null) {
+                    alimentosDao.create(nomeAlimento,
+                            idSubGrupo);
+                } else {
+                    alimentosDao.update(nomeAlimento,
+                            idSubGrupo,
+                            alimento.getIdAlimento());
+                }
                 finish();
             }
         });

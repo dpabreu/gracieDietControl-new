@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +19,9 @@ import br.com.cds.graciedietcontrol.dao.SubGruposDao;
 import br.com.cds.graciedietcontrol.model.SubGrupos;
 
 public class ListaSubGruposActivity extends AppCompatActivity {
-    SubGruposDao dao = new SubGruposDao(this);
+    private SubGruposDao dao = new SubGruposDao(this);
+    private ArrayAdapter<SubGrupos> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +63,7 @@ public class ListaSubGruposActivity extends AppCompatActivity {
 
     private void listarSubGrupos(){
         final List<SubGrupos> subGrupos = dao.getAll();
-        ArrayAdapter<SubGrupos> adapter = new ArrayAdapter<>( this,
+        adapter = new ArrayAdapter<>( this,
                 android.R.layout.simple_list_item_1, subGrupos);
         ListView subGruposList = findViewById(R.id.activity_lista_sub_grupos_listview);
         subGruposList.setAdapter(adapter);
@@ -73,6 +77,25 @@ public class ListaSubGruposActivity extends AppCompatActivity {
                 startActivity(vaiParaFormularioSubGrupo);
             }
         });
+
+        registerForContextMenu(subGruposList);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add("Remover");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo menuInfo =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        SubGrupos subGrupoEscolhido = adapter.getItem(menuInfo.position);
+        dao.delete(subGrupoEscolhido);
+        listarSubGrupos();
+
+        return super.onContextItemSelected(item);
+    }
 }
