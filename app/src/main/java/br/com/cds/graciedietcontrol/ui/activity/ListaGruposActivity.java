@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -34,6 +35,7 @@ public class ListaGruposActivity extends AppCompatActivity {
         abreConexao();
         super.onResume();
         listarGrupos();
+
     }
 
     @Override
@@ -59,11 +61,22 @@ public class ListaGruposActivity extends AppCompatActivity {
     }
 
     private void listarGrupos() {
-        List<Grupos> grupos = dao.getAll();
+        final List<Grupos> grupos = dao.getAll();
         ArrayAdapter<Grupos> adapter = new ArrayAdapter<>( this,
                 android.R.layout.simple_list_item_1, grupos);
         ListView gruposList = findViewById(R.id.activity_lista_grupos_listview);
         gruposList.setAdapter(adapter);
+
+        gruposList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Grupos grupoEscolhido = grupos.get(position);
+                Intent vaiParaFormularioGrupo = new Intent(ListaGruposActivity.this,
+                        FormularioGruposActivity.class);
+                vaiParaFormularioGrupo.putExtra("grupo", grupoEscolhido);
+                startActivity(vaiParaFormularioGrupo);
+            }
+        });
     }
 
 

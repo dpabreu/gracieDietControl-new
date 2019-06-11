@@ -1,26 +1,32 @@
 package br.com.cds.graciedietcontrol.ui.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import java.io.Serializable;
 import java.util.List;
 
 import br.com.cds.graciedietcontrol.R;
 import br.com.cds.graciedietcontrol.dao.GruposDao;
 import br.com.cds.graciedietcontrol.dao.SubGruposDao;
 import br.com.cds.graciedietcontrol.model.Grupos;
+import br.com.cds.graciedietcontrol.model.SubGrupos;
 
 public class FormularioSubGruposActivity extends AppCompatActivity {
     private GruposDao gruposDao = new GruposDao(this);
     private SubGruposDao subGruposDao = new SubGruposDao(this);
     private EditText campoNome;
     private Spinner campoGrupo;
+    private SubGrupos subGrupo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,13 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
         listarGrupos();
         inicializarCampos();
         configuraBotaoSalvar();
+
+        Intent dadosSubGrupo = getIntent();
+        subGrupo = (SubGrupos) dadosSubGrupo.getSerializableExtra("subGrupo");
+        if(subGrupo != null){
+            campoNome.setText(subGrupo.getNome());
+            listarGruposById(subGrupo.getIdGrupo());
+        }
     }
 
     private void abreConexao() {
@@ -66,6 +79,13 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
         Spinner gruposList = findViewById(R.id.activity_formulario_sub_grupos_spinner_grupos);
         gruposList.setAdapter(adapter);
         gruposList.setSelection(-1);
+    }
+
+    private void listarGruposById(long id){
+        List<Grupos> grupos = gruposDao.getGrupoById(id);
+        ArrayAdapter<Grupos> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, grupos);
+        campoGrupo.setAdapter(adapter);
     }
 
     @Override

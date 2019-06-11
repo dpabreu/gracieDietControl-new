@@ -1,18 +1,23 @@
 package br.com.cds.graciedietcontrol.ui.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.Serializable;
+
 import br.com.cds.graciedietcontrol.R;
 import br.com.cds.graciedietcontrol.dao.GruposDao;
+import br.com.cds.graciedietcontrol.model.Grupos;
 
 public class FormularioGruposActivity extends AppCompatActivity {
 
     private GruposDao dao = new GruposDao(this);
     private EditText campoNome;
+    private Grupos grupo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +27,12 @@ public class FormularioGruposActivity extends AppCompatActivity {
         dao.open();
         inicializaCamposGrupos();
         configuraBotaoSalvar();
+
+        Intent dadosGrupo = getIntent();
+        grupo = (Grupos) dadosGrupo.getSerializableExtra("grupo");
+        if(grupo != null){
+            campoNome.setText(grupo.getNome());
+        }
     }
 
     private void configuraBotaoSalvar() {

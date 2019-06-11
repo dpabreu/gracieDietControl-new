@@ -1,6 +1,8 @@
 package br.com.cds.graciedietcontrol.model;
 
-public class Alimentos {
+import java.io.Serializable;
+
+public class Alimentos implements Serializable {
 
     private long idAlimento;
     private String nome;

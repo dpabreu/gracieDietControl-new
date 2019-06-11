@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -57,11 +58,21 @@ public class ListaSubGruposActivity extends AppCompatActivity {
     }
 
     private void listarSubGrupos(){
-        List<SubGrupos> subGrupos = dao.getAll();
+        final List<SubGrupos> subGrupos = dao.getAll();
         ArrayAdapter<SubGrupos> adapter = new ArrayAdapter<>( this,
                 android.R.layout.simple_list_item_1, subGrupos);
         ListView subGruposList = findViewById(R.id.activity_lista_sub_grupos_listview);
         subGruposList.setAdapter(adapter);
+        subGruposList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SubGrupos subGrupoSelecionado = subGrupos.get(position);
+                Intent vaiParaFormularioSubGrupo = new Intent(ListaSubGruposActivity.this,
+                        FormularioSubGruposActivity.class);
+                vaiParaFormularioSubGrupo.putExtra("subGrupo", subGrupoSelecionado);
+                startActivity(vaiParaFormularioSubGrupo);
+            }
+        });
     }
 
 }

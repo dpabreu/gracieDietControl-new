@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,27 @@ public class SubGruposDao {
 
         Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_SUB_GRUPOS, columns, null,
                 null,null, null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+
+            SubGrupos subGrupo = new SubGrupos();
+            subGrupo.setIdSubGrupo(cursor.getLong(0));
+            subGrupo.setNome(cursor.getString(1));
+            subGrupo.setIdGrupo(cursor.getLong(2));
+            subGrupos.add(subGrupo);
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return subGrupos;
+    }
+
+    public List<SubGrupos> getById(long id){
+        List<SubGrupos> subGrupos = new ArrayList<>();
+
+        Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_SUB_GRUPOS, columns,
+                CustomSQLiteOpenHelper.COLUMN_ID_SUB_GRUPO + "=" + id,null,null,
+                null,null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
 

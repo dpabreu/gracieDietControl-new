@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -56,11 +57,21 @@ public class ListaAlimentosActivity extends AppCompatActivity {
     }
 
     private void listarAlimentos() {
-        List<Alimentos> alimentos = alimentosDao.getAll();
+        final List<Alimentos> alimentos = alimentosDao.getAll();
         ArrayAdapter<Alimentos> adapter = new ArrayAdapter<>( this,
                 android.R.layout.simple_list_item_1, alimentos);
         ListView alimentosList = findViewById(R.id.activity_lista_alimentos_listview);
         alimentosList.setAdapter(adapter);
+        alimentosList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Alimentos alimentoSelicionado = alimentos.get(position);
+                Intent vaiParaFormularioAlimentos = new Intent(ListaAlimentosActivity.this,
+                        FormularioAlimentosActivity.class);
+                vaiParaFormularioAlimentos.putExtra("alimento", alimentoSelicionado);
+                startActivity(vaiParaFormularioAlimentos);
+            }
+        });
     }
 
     private void abreConexao() {

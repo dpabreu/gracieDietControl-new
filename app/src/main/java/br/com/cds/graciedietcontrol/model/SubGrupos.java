@@ -1,6 +1,8 @@
 package br.com.cds.graciedietcontrol.model;
 
-public class SubGrupos {
+import java.io.Serializable;
+
+public class SubGrupos implements Serializable {
     private long idSubGrupo;
     private String nome;
     private long idGrupo;

@@ -1,5 +1,6 @@
 package br.com.cds.graciedietcontrol.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,6 +16,7 @@ import br.com.cds.graciedietcontrol.R;
 import br.com.cds.graciedietcontrol.dao.AlimentosDao;
 import br.com.cds.graciedietcontrol.dao.GruposDao;
 import br.com.cds.graciedietcontrol.dao.SubGruposDao;
+import br.com.cds.graciedietcontrol.model.Alimentos;
 import br.com.cds.graciedietcontrol.model.Grupos;
 import br.com.cds.graciedietcontrol.model.SubGrupos;
 
@@ -26,6 +28,7 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
     private TextView campoNome;
     private Spinner campoSubGrupo;
     private Spinner campoGrupo;
+    private Alimentos alimento;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,13 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
         listarSubGrupos();
         inicializaCampos();
         configuraBotaoSalvar();
+
+        Intent dadosAlimento = getIntent();
+        alimento = (Alimentos) dadosAlimento.getSerializableExtra("alimento");
+        if(alimento != null){
+            campoNome.setText(alimento.getNome());
+            listarSubGruposById(alimento.getIdSubGrupo());
+        }
     }
 
     private void abreConexao() {
@@ -58,6 +68,16 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, grupos);
         campoGrupo.setAdapter(adapter);
     }
+
+    private void listarSubGruposById(long id){
+        List<SubGrupos> subGrupos = subGruposDao.getById(id);
+        ArrayAdapter<SubGrupos> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, subGrupos);
+        campoSubGrupo.setAdapter(adapter);
+
+        listarGruposById(subGrupos.get(0).getIdGrupo());
+    }
+
     private void inicializaCampos() {
         campoNome = findViewById(R.id.activity_formulario_alimento_nome);
         campoSubGrupo = findViewById(R.id.activity_formulario_alimento_spinner_subGrupos);
@@ -72,7 +92,7 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //todo
+                //
             }
         });
 
