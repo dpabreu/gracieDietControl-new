@@ -27,6 +27,8 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
     private EditText campoNome;
     private Spinner campoGrupo;
     private SubGrupos subGrupo = null;
+    private List<Grupos> grupos;
+    private ArrayAdapter<Grupos> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,16 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
         subGrupo = (SubGrupos) dadosSubGrupo.getSerializableExtra("subGrupo");
         if(subGrupo != null){
             campoNome.setText(subGrupo.getNome());
-            listarGruposById(subGrupo.getIdGrupo());
+
+            int idx = -1;
+
+            for(Grupos grupo : grupos){
+                if(grupo.getIdGrupo()==subGrupo.getIdGrupo()){
+                    idx = adapter.getPosition(grupo);
+                }
+            }
+
+            campoGrupo.setSelection(idx);
         }
     }
 
@@ -79,19 +90,12 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
 
 
     private void listarGrupos() {
-        List<Grupos> grupos = gruposDao.getAll();
-        ArrayAdapter<Grupos> adapter = new ArrayAdapter<>( this,
+        grupos = gruposDao.getAll();
+        adapter = new ArrayAdapter<>( this,
                 android.R.layout.simple_list_item_1, grupos);
         Spinner gruposList = findViewById(R.id.activity_formulario_sub_grupos_spinner_grupos);
         gruposList.setAdapter(adapter);
         gruposList.setSelection(-1);
-    }
-
-    private void listarGruposById(long id){
-        List<Grupos> grupos = gruposDao.getGrupoById(id);
-        ArrayAdapter<Grupos> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, grupos);
-        campoGrupo.setAdapter(adapter);
     }
 
     @Override

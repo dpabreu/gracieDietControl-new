@@ -29,6 +29,8 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
     private Spinner campoSubGrupo;
     private Spinner campoGrupo;
     private Alimentos alimento = null;
+    private List<SubGrupos> subGrupos;
+    private ArrayAdapter<SubGrupos> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,15 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
         alimento = (Alimentos) dadosAlimento.getSerializableExtra("alimento");
         if(alimento != null){
             campoNome.setText(alimento.getNome());
-            listarSubGruposById(alimento.getIdSubGrupo());
+
+            int idx = -1;
+            for(SubGrupos subGrupo : subGrupos){
+                if(subGrupo.getIdSubGrupo()==alimento.getIdSubGrupo()){
+                    idx = adapter.getPosition(subGrupo);
+                }
+            }
+
+            campoSubGrupo.setSelection(idx);
         }
     }
 
@@ -55,28 +65,36 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
     }
 
     private void listarSubGrupos() {
-        List<SubGrupos> subGrupos = subGruposDao.getAll();
-        ArrayAdapter<SubGrupos> adapter = new ArrayAdapter<>( this,
+        subGrupos = subGruposDao.getAll();
+        adapter = new ArrayAdapter<>( this,
                 android.R.layout.simple_list_item_1, subGrupos);
         Spinner subGruposList = findViewById(R.id.activity_formulario_alimento_spinner_subGrupos);
         subGruposList.setAdapter(adapter);
     }
 
     private void listarGruposById(long id){
-        List<Grupos> grupos = gruposDao.getGrupoById(id);
-        ArrayAdapter<Grupos> adapter = new ArrayAdapter<>(this,
+        List<Grupos> grupos = gruposDao.getAll();
+        ArrayAdapter<Grupos> adapterGrupo = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, grupos);
-        campoGrupo.setAdapter(adapter);
+        campoGrupo.setAdapter(adapterGrupo);
+
+        int idx = -1;
+        for(Grupos grupo : grupos){
+            if(grupo.getIdGrupo() == id){
+                idx = adapterGrupo.getPosition(grupo);
+            }
+        }
+        campoGrupo.setSelection(idx);
     }
 
-    private void listarSubGruposById(long id){
-        List<SubGrupos> subGrupos = subGruposDao.getById(id);
-        ArrayAdapter<SubGrupos> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, subGrupos);
-        campoSubGrupo.setAdapter(adapter);
-
-        listarGruposById(subGrupos.get(0).getIdGrupo());
-    }
+//    private void listarSubGruposById(long id){
+//        List<SubGrupos> subGrupos = subGruposDao.getById(id);
+//        ArrayAdapter<SubGrupos> adapter = new ArrayAdapter<>(this,
+//                android.R.layout.simple_list_item_1, subGrupos);
+//        campoSubGrupo.setAdapter(adapter);
+//
+////        listarGruposById(subGrupos.get(0).getIdGrupo());
+//    }
 
     private void inicializaCampos() {
         campoNome = findViewById(R.id.activity_formulario_alimento_nome);
@@ -107,13 +125,13 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
                 String nomeAlimento = campoNome.getEditableText().toString();
                 SubGrupos subGrupo = (SubGrupos) campoSubGrupo.getSelectedItem();
                 long idSubGrupo = subGrupo.getIdSubGrupo();
-                if(alimentosDao==null) {
-                    alimentosDao.create(nomeAlimento,
-                            idSubGrupo);
-                } else {
+                if(alimento!=null) {
                     alimentosDao.update(nomeAlimento,
                             idSubGrupo,
                             alimento.getIdAlimento());
+                } else {
+                    alimentosDao.create(nomeAlimento,
+                            idSubGrupo);
                 }
                 finish();
             }
