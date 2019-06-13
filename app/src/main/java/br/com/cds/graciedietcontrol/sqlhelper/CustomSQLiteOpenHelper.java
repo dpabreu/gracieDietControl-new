@@ -39,6 +39,29 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
             COLUMN_ID_SUB_GRUPO_FK + " integer not null, " +
             " foreign key(id_sub_grupo) references sub_grupos(id_sub_grupo));";
 
+    //Tabela Refeições
+    public static final String TABLE_REFEICOES = "refeicoes";
+    public static final String COLUMN_ID_REFEICAO = "id_refeicao";
+    public static final String COLUMN_TIPO_REFEICAO = "tipo_refeicao";
+    public static final String COLUMN_REFEICAO_VALIDA = "refeicao_valida";
+    public static final String COLUMN_DATA_REFEICAO =  "data_refeicao";
+    public static final String CREATE_TABLE_REFEICOES = "create table "+ TABLE_REFEICOES +
+            "(" + COLUMN_ID_REFEICAO + " integer primary key autoincrement, " +
+            COLUMN_TIPO_REFEICAO + " text not null, " +
+            COLUMN_REFEICAO_VALIDA + " integer not null, " +
+            COLUMN_DATA_REFEICAO + " datetime current_timestamp);";
+
+    //Tabela Refeicoes_Alimentos
+    public static final String TABLE_REFEICOES_ALIMENTOS = "refeicoes_alimentos";
+    public static final String COLUMN_ID_REFEICAO_FK = "id_refeicao";
+    public static final String COLUMN_ID_ALIMENTO_FK = "id_alimento";
+    public static final String CREATE_TABLE_REFEICOES_ALIMENTOS = "create table "+ TABLE_REFEICOES_ALIMENTOS +
+            "(" + COLUMN_ID_REFEICAO_FK + "integer not null, " +
+            COLUMN_ID_ALIMENTO_FK + " integer not null, " +
+            " primary key(id_refeicao, id_alimento), " +
+            " foreign key(id_refeicao) references refeicoes(id_refeicao), " +
+            " foreign key(id_alimento) references alimentos(id_alimento));";
+
     public CustomSQLiteOpenHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -48,6 +71,8 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_GRUPOS);
         db.execSQL(CREATE_TABLE_SUB_GRUPOS);
         db.execSQL(CREATE_TABLE_ALIMENTOS);
+        db.execSQL(CREATE_TABLE_REFEICOES);
+        db.execSQL(CREATE_TABLE_REFEICOES_ALIMENTOS);
     }
 
     @Override
@@ -55,6 +80,8 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GRUPOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SUB_GRUPOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALIMENTOS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REFEICOES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REFEICOES_ALIMENTOS);
         onCreate(db);
     }
 }
