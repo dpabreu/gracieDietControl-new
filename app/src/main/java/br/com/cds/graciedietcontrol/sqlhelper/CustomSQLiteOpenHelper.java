@@ -49,7 +49,7 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
             "(" + COLUMN_ID_REFEICAO + " integer primary key autoincrement, " +
             COLUMN_TIPO_REFEICAO + " text not null, " +
             COLUMN_REFEICAO_VALIDA + " integer not null, " +
-            COLUMN_DATA_REFEICAO + " datetime current_timestamp);";
+            COLUMN_DATA_REFEICAO + " datetime default current_timestamp);";
 
     //Tabela Refeicoes_Alimentos
     public static final String TABLE_REFEICOES_ALIMENTOS = "refeicoes_alimentos";
