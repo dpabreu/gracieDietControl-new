@@ -7,7 +7,7 @@ import java.util.List;
 public class Refeicoes implements Serializable {
 
     private long idRefeicao;
-    private TipoRefeicao tipoRefeicao;
+    private String tipoRefeicao;
     private Integer refeicaoValida;
     private List<Alimentos> alimentos;
     private Date dataRefeicao;
@@ -16,7 +16,7 @@ public class Refeicoes implements Serializable {
         return idRefeicao;
     }
 
-    public TipoRefeicao getTipoRefeicao() {
+    public String getTipoRefeicao() {
         return tipoRefeicao;
     }
 
@@ -36,7 +36,7 @@ public class Refeicoes implements Serializable {
         this.idRefeicao = idRefeicao;
     }
 
-    public void setTipoRefeicao(TipoRefeicao tipoRefeicao) {
+    public void setTipoRefeicao(String tipoRefeicao) {
         this.tipoRefeicao = tipoRefeicao;
     }
 

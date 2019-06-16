@@ -33,7 +33,7 @@ public class MotivosDao {
 
     public List<Motivos> getAll(){
         List<Motivos> motivos = new ArrayList<>();
-        Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_REFEICOES, columns, null,
+        Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_MOTIVOS, columns, null,
                 null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -49,5 +49,22 @@ public class MotivosDao {
         cursor.close();
 
         return motivos;
+    }
+
+    public Motivos getMotivoByCodMotivo(String codMotivo){
+        Motivos motivo = new Motivos();
+
+        String sqlQuery = "select id_motivo, cod_motivo, motivo from motivos where cod_motivo = ?";
+        Cursor cursor = dataBase.rawQuery(sqlQuery, new String[] {codMotivo});
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            motivo.setIdMotivo(cursor.getLong(0));
+            motivo.setCodMotivo(cursor.getString(1));
+            motivo.setMotivo(cursor.getString(2));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return motivo;
     }
 }

@@ -7,13 +7,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "graciediet.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     //Tabela Grupos
     public static final String TABLE_GRUPOS = "grupos";
     public static final String COLUMN_ID = "id_grupo";
     public static final String COLUMN_NOME = "nome";
-    public static final String CREATE_TABLE_GRUPOS = "create table "+ TABLE_GRUPOS +
+    private static final String CREATE_TABLE_GRUPOS = "create table "+ TABLE_GRUPOS +
             "(" + COLUMN_ID + " integer primary key autoincrement, " +
             COLUMN_NOME + " text not null);";
 
@@ -22,7 +22,7 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_SUB_GRUPO = "id_sub_grupo";
     public static final String COLUMN_NOME_SUB_GRUPO = "nome";
     public static final String COLUMN_ID_GRUPO_FK = "id_grupo";
-    public static final String CREATE_TABLE_SUB_GRUPOS = "create table "+ TABLE_SUB_GRUPOS +
+    private static final String CREATE_TABLE_SUB_GRUPOS = "create table "+ TABLE_SUB_GRUPOS +
             "(" + COLUMN_ID_SUB_GRUPO + " integer primary key autoincrement, " +
             COLUMN_NOME_SUB_GRUPO + " text not null, "+
             COLUMN_ID_GRUPO_FK + " integer not null, "+
@@ -33,7 +33,7 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_ALIMENTO = "id_alimento";
     public static final String COLUMN_NOME_ALIMENTO = "nome";
     public static final String COLUMN_ID_SUB_GRUPO_FK = "id_sub_grupo";
-    public static final String CREATE_TABLE_ALIMENTOS = "create table "+ TABLE_ALIMENTOS +
+    private static final String CREATE_TABLE_ALIMENTOS = "create table "+ TABLE_ALIMENTOS +
             "(" + COLUMN_ID_ALIMENTO + " integer primary key autoincrement, " +
             COLUMN_NOME_ALIMENTO + " text not null, " +
             COLUMN_ID_SUB_GRUPO_FK + " integer not null, " +
@@ -44,8 +44,8 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_REFEICAO = "id_refeicao";
     public static final String COLUMN_TIPO_REFEICAO = "tipo_refeicao";
     public static final String COLUMN_REFEICAO_VALIDA = "refeicao_valida";
-    public static final String COLUMN_DATA_REFEICAO =  "data_refeicao";
-    public static final String CREATE_TABLE_REFEICOES = "create table "+ TABLE_REFEICOES +
+    private static final String COLUMN_DATA_REFEICAO =  "data_refeicao";
+    private static final String CREATE_TABLE_REFEICOES = "create table "+ TABLE_REFEICOES +
             "(" + COLUMN_ID_REFEICAO + " integer primary key autoincrement, " +
             COLUMN_TIPO_REFEICAO + " text not null, " +
             COLUMN_REFEICAO_VALIDA + " integer not null, " +
@@ -55,8 +55,8 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_REFEICOES_ALIMENTOS = "refeicoes_alimentos";
     public static final String COLUMN_ID_REFEICAO_FK = "id_refeicao";
     public static final String COLUMN_ID_ALIMENTO_FK = "id_alimento";
-    public static final String CREATE_TABLE_REFEICOES_ALIMENTOS = "create table "+ TABLE_REFEICOES_ALIMENTOS +
-            "(" + COLUMN_ID_REFEICAO_FK + "integer not null, " +
+    private static final String CREATE_TABLE_REFEICOES_ALIMENTOS = "create table "+ TABLE_REFEICOES_ALIMENTOS +
+            "(" + COLUMN_ID_REFEICAO_FK + " integer not null, " +
             COLUMN_ID_ALIMENTO_FK + " integer not null, " +
             " primary key(id_refeicao, id_alimento), " +
             " foreign key(id_refeicao) references refeicoes(id_refeicao), " +
@@ -67,13 +67,13 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_MOTIVO = "id_motivo";
     public static final String COLUMN_COD_MOTIVO = "cod_motivo";
     public static final String COLUMN_MOTIVO = "motivo";
-    public static final String CREATE_TABLE_MOTIVOS = "create table " + TABLE_MOTIVOS +
+    private static final String CREATE_TABLE_MOTIVOS = "create table " + TABLE_MOTIVOS +
             "(" + COLUMN_ID_MOTIVO + " integer primary key autoincrement, " +
             COLUMN_COD_MOTIVO + " text not null, " +
-            COLUMN_MOTIVO + "text not null);";
+            COLUMN_MOTIVO + " text not null);";
 
     //Tabela MotivosRefeicoes
-    public static final String TABLE_MOTIVOS_REFEICOES = "motivos_refeicoes";
+    private static final String TABLE_MOTIVOS_REFEICOES = "motivos_refeicoes";
     public static final String COLUMN_ID_MOTIVO_FK = "id_motivo";
     public static final String COLUMN_ID_REFEICAO_MOT_FK = "id_refeicao";
     public static final String CREATE_TABLE_MOTIVOS_REFEICOES = "create table " + TABLE_MOTIVOS_REFEICOES +
@@ -82,8 +82,6 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
             " primary key(id_motivo, id_refeicao), " +
             " foreign key(id_motivo) references motivos(id_motivo), " +
             " foreign key(id_refeicao) references refeicoes(id_refeicao)); ";
-
-
 
     public CustomSQLiteOpenHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -99,30 +97,31 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_MOTIVOS);
         db.execSQL(CREATE_TABLE_MOTIVOS_REFEICOES);
 
-        //inserindo dados fixos em motivos
-        insereMotivos(db);
+//        //inserindo dados fixos em motivos
+//        insereMotivos(db);
     }
 
-    private void insereMotivos(SQLiteDatabase db) {
-
-        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
-                   "VALUES('001', 'Grupo A não combina com Grupo C')");
-
-        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
-                   "VALUES('002', 'Grupo B não combina com outro alimento do Grupo B')");
-
-        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
-                   "VALUES('003', 'Grupo C não combina com Grupo B preparado com gordura')");
-
-        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
-                   "VALUES('004', 'Grupo D não combina com nada')");
-
-        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
-                   "VALUES('005', 'Grupo E combina com Frutas Doces Frescas e Queijos Frescos')");
-
-        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
-                   "VALUES('006', 'Grupo F combina com Grupo B, Grupo E, queijos e manteiga')");
-    }
+//    private void insereMotivos(SQLiteDatabase db) {
+//
+//        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
+//                   "VALUES('001', 'Grupo A não combina com Grupo C')");
+//
+//        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
+//                   "VALUES('002', 'Grupo B não combina com outro alimento do Grupo B')");
+//
+//        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
+//                   "VALUES('003', 'Grupo C não combina com Grupo B preparado com gordura')");
+//
+//        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
+//                   "VALUES('004', 'Grupo D não combina com nada')");
+//
+//        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
+//                   "VALUES('005', 'Grupo E combina com Frutas Doces Frescas e Queijos Frescos')");
+//
+//        db.execSQL("INSERT INTO MOTIVOS(cod_motivo, motivo) " +
+//                   "VALUES('006', 'Grupo F combina com Grupo B, Grupo E, queijos e manteiga')");
+//
+//    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

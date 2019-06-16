@@ -129,4 +129,24 @@ public class SubGruposDao {
         return subGrupos;
     }
 
+    public SubGrupos getSubGruposById(long id){
+        SubGrupos subGrupo = new SubGrupos();
+
+        Cursor cursor = dataBase.query(CustomSQLiteOpenHelper.TABLE_SUB_GRUPOS, columns,
+                CustomSQLiteOpenHelper.COLUMN_ID_SUB_GRUPO + "=" + id,null,null,
+                null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+
+            subGrupo.setIdSubGrupo(cursor.getLong(0));
+            subGrupo.setNome(cursor.getString(1));
+            subGrupo.setIdGrupo(cursor.getLong(2));
+
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return subGrupo;
+    }
+
 }

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.cds.graciedietcontrol.model.Alimentos;
+import br.com.cds.graciedietcontrol.model.Motivos;
 import br.com.cds.graciedietcontrol.model.Refeicoes;
-import br.com.cds.graciedietcontrol.model.TipoRefeicao;
 import br.com.cds.graciedietcontrol.sqlhelper.CustomSQLiteOpenHelper;
 
 public class RefeicoesDao {
@@ -19,8 +19,6 @@ public class RefeicoesDao {
     private String[] columns = {CustomSQLiteOpenHelper.COLUMN_ID_REFEICAO,
             CustomSQLiteOpenHelper.COLUMN_TIPO_REFEICAO,
             CustomSQLiteOpenHelper.COLUMN_REFEICAO_VALIDA};
-    private String[] columns_alimentos = {CustomSQLiteOpenHelper.COLUMN_ID_REFEICAO_FK,
-            CustomSQLiteOpenHelper.COLUMN_ID_REFEICAO_FK};
     private CustomSQLiteOpenHelper sqLiteOpenHelper;
 
     public RefeicoesDao(Context ctx){
@@ -36,7 +34,7 @@ public class RefeicoesDao {
     }
 
     public Refeicoes create(String tipoRefeicao, Integer refeicaoValida,
-                            List<Alimentos> alimentos){
+                            List<Alimentos> alimentos, Motivos motivo){
         ContentValues values = new ContentValues();
         values.put(CustomSQLiteOpenHelper.COLUMN_TIPO_REFEICAO, tipoRefeicao);
         values.put(CustomSQLiteOpenHelper.COLUMN_REFEICAO_VALIDA, refeicaoValida);
@@ -50,7 +48,7 @@ public class RefeicoesDao {
 
         Refeicoes newRefeicao = new Refeicoes();
         newRefeicao.setIdRefeicao(cursor.getLong(0));
-        newRefeicao.setTipoRefeicao(parseTipoRefeicao(cursor.getString(1)));
+        newRefeicao.setTipoRefeicao(cursor.getString(1));
         newRefeicao.setRefeicaoValida(cursor.getInt(2));
         cursor.close();
 
@@ -59,16 +57,20 @@ public class RefeicoesDao {
             valuesAliementos.put(CustomSQLiteOpenHelper.COLUMN_ID_REFEICAO_FK, newRefeicao.getIdRefeicao());
             valuesAliementos.put(CustomSQLiteOpenHelper.COLUMN_ID_ALIMENTO_FK, alimento.getIdAlimento());
 
-            long insertIdAlimento = dataBase.insert(CustomSQLiteOpenHelper.TABLE_REFEICOES_ALIMENTOS,
-                    null, valuesAliementos);
-
-            Cursor cursorAlimento = dataBase.query(CustomSQLiteOpenHelper.TABLE_REFEICOES_ALIMENTOS,
-                     columns_alimentos,CustomSQLiteOpenHelper.COLUMN_ID_REFEICAO +" = " + insertIdAlimento,
-                    null,null,null,null);
-            cursor.moveToFirst();
+            dataBase.insert(CustomSQLiteOpenHelper.TABLE_REFEICOES_ALIMENTOS,null,
+                    valuesAliementos);
         }
-
         newRefeicao.setAlimentos(alimentos);
+
+        if(newRefeicao.getRefeicaoValida()==0){
+            ContentValues valuesRefeicoesMotivos = new ContentValues();
+            valuesRefeicoesMotivos.put(CustomSQLiteOpenHelper.COLUMN_ID_MOTIVO_FK, motivo.getIdMotivo());
+            valuesRefeicoesMotivos.put(CustomSQLiteOpenHelper.COLUMN_ID_REFEICAO_MOT_FK, newRefeicao.getIdRefeicao());
+
+            dataBase.insert(CustomSQLiteOpenHelper.CREATE_TABLE_MOTIVOS_REFEICOES,null,
+                    valuesRefeicoesMotivos);
+
+        }
         return newRefeicao;
     }
 
@@ -82,7 +84,7 @@ public class RefeicoesDao {
 
             Refeicoes refeicao = new Refeicoes();
             refeicao.setIdRefeicao(cursor.getLong(0));
-            refeicao.setTipoRefeicao(parseTipoRefeicao(cursor.getString(1)));
+            refeicao.setTipoRefeicao(cursor.getString(1));
             refeicao.setRefeicaoValida(cursor.getInt(2));
 
             refeicoes.add(refeicao);
@@ -91,22 +93,6 @@ public class RefeicoesDao {
         }
         cursor.close();
         return refeicoes;
-    }
-
-    private TipoRefeicao parseTipoRefeicao(String tipoRefeicaoStr) {
-        TipoRefeicao tipoRefeicao = null;
-        switch (tipoRefeicaoStr){
-            case "CAFE":
-                tipoRefeicao=TipoRefeicao.CAFE;
-                break;
-            case "ALMOCO":
-                tipoRefeicao=TipoRefeicao.ALMOCO;
-                break;
-            case "JANTA":
-                tipoRefeicao=TipoRefeicao.JANTA;
-                break;
-        }
-        return tipoRefeicao;
     }
 
 }
