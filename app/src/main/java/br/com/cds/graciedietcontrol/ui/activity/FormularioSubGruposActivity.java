@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -64,17 +65,22 @@ public class FormularioSubGruposActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String nomeSubGrupo = campoNome.getEditableText().toString();
-                Grupos grupo = (Grupos) campoGrupo.getSelectedItem();
-                long idGrupo = grupo.getIdGrupo();
-                if(subGrupo==null) {
-                    subGruposDao.create(nomeSubGrupo,
-                            idGrupo);
+                if(!nomeSubGrupo.equals("")) {
+                    Grupos grupo = (Grupos) campoGrupo.getSelectedItem();
+                    long idGrupo = grupo.getIdGrupo();
+                    if (subGrupo == null) {
+                        subGruposDao.create(nomeSubGrupo,
+                                idGrupo);
+                    } else {
+                        subGruposDao.update(nomeSubGrupo,
+                                idGrupo,
+                                subGrupo.getIdSubGrupo());
+                    }
+                    finish();
                 } else {
-                    subGruposDao.update(nomeSubGrupo,
-                            idGrupo,
-                            subGrupo.getIdSubGrupo());
+                    Toast.makeText(FormularioSubGruposActivity.this,
+                            "Informe o nome do sub-grupo.", Toast.LENGTH_SHORT).show();
                 }
-                finish();
             }
         });
     }

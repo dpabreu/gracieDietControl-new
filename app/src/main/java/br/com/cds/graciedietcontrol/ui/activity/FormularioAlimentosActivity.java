@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -123,17 +124,22 @@ public class FormularioAlimentosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String nomeAlimento = campoNome.getEditableText().toString();
-                SubGrupos subGrupo = (SubGrupos) campoSubGrupo.getSelectedItem();
-                long idSubGrupo = subGrupo.getIdSubGrupo();
-                if(alimento!=null) {
-                    alimentosDao.update(nomeAlimento,
-                            idSubGrupo,
-                            alimento.getIdAlimento());
+                if(!nomeAlimento.equals("")) {
+                    SubGrupos subGrupo = (SubGrupos) campoSubGrupo.getSelectedItem();
+                    long idSubGrupo = subGrupo.getIdSubGrupo();
+                    if (alimento != null) {
+                        alimentosDao.update(nomeAlimento,
+                                idSubGrupo,
+                                alimento.getIdAlimento());
+                    } else {
+                        alimentosDao.create(nomeAlimento,
+                                idSubGrupo);
+                    }
+                    finish();
                 } else {
-                    alimentosDao.create(nomeAlimento,
-                            idSubGrupo);
+                    Toast.makeText(FormularioAlimentosActivity.this,
+                            "Informe o nome do alimento.", Toast.LENGTH_SHORT).show();
                 }
-                finish();
             }
         });
     }

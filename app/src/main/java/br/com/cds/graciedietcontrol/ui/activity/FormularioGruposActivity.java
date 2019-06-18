@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import br.com.cds.graciedietcontrol.R;
 import br.com.cds.graciedietcontrol.dao.GruposDao;
@@ -39,12 +40,17 @@ public class FormularioGruposActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String nomeGrupo = campoNome.getEditableText().toString();
-                if(grupo==null) {
-                    dao.create(nomeGrupo);
+                if(!nomeGrupo.equals("")) {
+                    if (grupo == null) {
+                        dao.create(nomeGrupo);
+                    } else {
+                        dao.update(nomeGrupo, grupo.getIdGrupo());
+                    }
+                    finish();
                 } else {
-                    dao.update(nomeGrupo, grupo.getIdGrupo());
+                    Toast.makeText(FormularioGruposActivity.this,
+                            "Informe o nome do grupo.", Toast.LENGTH_SHORT).show();
                 }
-                finish();
             }
         });
     }

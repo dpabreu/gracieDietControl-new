@@ -262,6 +262,8 @@ public class MainActivity extends AppCompatActivity {
         Spinner spinnerAlimento = findViewById(R.id.activity_main_spinner_alimentos);
         spinnerAlimento.setSelection(0);
 
+        configuraAlimentos();
+
     }
 
     @Override
